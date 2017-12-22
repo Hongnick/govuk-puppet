@@ -44,6 +44,19 @@ class govuk_jenkins::job::smokey (
   $slack_room = '2ndline'
   $slack_build_server_url = "https://deploy.${app_domain}/"
 
+  $app = 'smokey'
+
+  file { ["/etc/govuk/${app}", "/etc/govuk/${app}/env.d"]:
+    ensure => 'directory',
+  }
+
+  govuk::app::envvar { 'GOVUK_APP_DOMAIN':
+    app            => $app,
+    value          => $app_domain,
+    notify_service => false,
+    require        => File["/etc/govuk/${app}/env.d"],
+  }
+
   file { '/etc/jenkins_jobs/jobs/smokey.yaml':
     ensure  => present,
     content => template('govuk_jenkins/jobs/smokey.yaml.erb'),
