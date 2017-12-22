@@ -111,6 +111,11 @@ class govuk::deploy::config(
       value => "https://licensify.${licensify_app_domain}",
     }
 
+    # Apps that auth with Signon should do so across the publishing domain
+    govuk_envvar { 'PLEK_SERVICE_SIGNON_URI':
+      value => "https://signon.${app_domain}",
+    }
+
   } else {
     govuk_envvar { 'GOVUK_APP_DOMAIN':
       value => $app_domain,
